@@ -37,7 +37,7 @@ connectToRabbitMQ().then(() => {
         const order = {products, total}
 
         oModel.create(order).then((o) => {
-            console.log('order cree')
+           channel.sendToQueue(q2, Buffer.from(JSON.stringify(o)))
         }
     )
         channel.ack(data);

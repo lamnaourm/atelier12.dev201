@@ -41,7 +41,11 @@ routes.post('/buy', (req, res) => {
 
     PModel.find({_id:{$in:ids}}).then((produits) =>{
         channel.sendToQueue(q1, Buffer.from(JSON.stringify(produits)))
-        res.end()
+       
+        channel.consume(q2, (data) => {
+            const order = JSON.parse(data.content.toString())
+            res.json(order)
+        })
     })
 })
 
