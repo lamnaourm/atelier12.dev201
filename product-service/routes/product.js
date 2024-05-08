@@ -44,7 +44,8 @@ routes.post('/buy', (req, res) => {
        
         channel.consume(q2, (data) => {
             const order = JSON.parse(data.content.toString())
-            res.json(order)
+            channel.ack(data);
+            return res.json(order)
         })
     })
 })

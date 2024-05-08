@@ -16,6 +16,7 @@ mongoose.connect('mongodb://localhost:27017/dborders')
  var connection, channel;
 const q1 = 'order-service-queue'
 const q2 = 'produit-service-queue'
+const q3 = 'notification-service-queue'
 
 const connectToRabbitMQ = async ()=>{
     const ch = 'amqp://guest:guest@localhost:5672'
@@ -23,6 +24,7 @@ const connectToRabbitMQ = async ()=>{
     channel = await connection.createChannel()
     channel.assertQueue(q1)
     channel.assertQueue(q2)
+    channel.assertQueue(q3)
 }
 
 
@@ -37,7 +39,8 @@ connectToRabbitMQ().then(() => {
         const order = {products, total}
 
         oModel.create(order).then((o) => {
-           channel.sendToQueue(q2, Buffer.from(JSON.stringify(o)))
+            channel.sendToQueue(q2, Buffer.from(JSON.stringify(o)))
+            channel.sendToQueue(q3, Buffer.from(JSON.stringify(o)))
         }
     )
         channel.ack(data);
