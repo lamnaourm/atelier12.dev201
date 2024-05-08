@@ -1,4 +1,4 @@
-import { Schema } from "mongoose";
+import { Schema, model } from "mongoose";
 
 
 const OrderSchema = Schema({
@@ -11,3 +11,5 @@ const OrderSchema = Schema({
     ],
     total:{type:Number, required:true}
 })
+
+export default model('order', OrderSchema)
